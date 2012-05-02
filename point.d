@@ -141,3 +141,5 @@ struct Point {
 /// The x coordinates increase downwards and the y coordinates increase
 /// rightwards.
 enum origin = Point(0, 0);
+
+void main(){}
