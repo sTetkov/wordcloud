@@ -19,21 +19,25 @@ import std.conv;
  * Authors: Jens K. Mueller, jkm@informatik.uni-jena.de
  *
  */
-struct Point {
+struct Point
+{
 	/// Constructs a Point from given x and y coordinate.
 	/// Params: x = is the x coordinate.
 	///         y = is the y coordinate.
-	this(int x, int y) {
+	this(int x, int y)
+	{
 		_x = x;
 		_y = y;
 	}
 
 	/// Returns: This Point as string. E.g. "(1,1)" for Point(1,1).
-	string toString() const {
+	string toString() const
+	{
 		return "(" ~ to!string(_x) ~ "," ~ to!string(_y) ~ ")";
 	}
 
-	unittest {
+	unittest
+	{
 		Point p;
 		assert(to!string(p) == "(0,0)");
 		assert(p.toString() == "(0,0)");
@@ -52,7 +56,8 @@ struct Point {
 	@property
 	int y() const { return _y; }
 
-	unittest {
+	unittest
+	{
 		Point p;
 		assert(p.x == 0);
 		assert(p.y == 0);
@@ -73,7 +78,8 @@ struct Point {
 	@property
 	int y(int y) { return _y = y; }
 
-	unittest {
+	unittest
+	{
 		Point p;
 		assert((p.x = 1) == 1);
 		assert((p.y = 2) == 2);
@@ -89,12 +95,14 @@ struct Point {
 	/// Params: rhs = is the right-hand side Point
 	/// Returns: A new Point such that x == this.x op rhs.x and y == this.y op
 	/// rhs.y
-	Point opBinary(string op)(const Point rhs) const if (op == "+" || op == "-") {
+	Point opBinary(string op) (const Point rhs) const if (op == "+" || op == "-")
+	{
 		return Point(mixin("_x" ~ op ~ "rhs._x"),
 		             mixin("_y" ~ op ~ "rhs._y"));
 	}
 
-	unittest {
+	unittest
+	{
 		Point p1;
 		Point p2 = Point(1,2);
 		assert(p1 + p2 == Point(1,2));
@@ -106,13 +114,15 @@ struct Point {
 	/// Params: rhs = is right-hand side Point
 	/// Returns: This Point such that this.x = this.x op rhs.x and this.y =
 	/// this.y op rhs.y
-	ref Point opOpAssign(string op)(const Point rhs) if (op == "+" || op == "-") {
+	ref Point opOpAssign(string op) (const Point rhs) if (op == "+" || op == "-")
+	{
 		mixin("_x" ~ op ~ "=rhs.x;");
 		mixin("_y" ~ op ~ "=rhs.y;");
 		return this;
 	}
 
-	unittest {
+	unittest
+	{
 		Point p1;
 		p1 += Point(1,2);
 		assert(p1 == Point(1,2));
@@ -122,17 +132,13 @@ struct Point {
 
 	/// Returns: the Point with largest coordinate in x and y direction.
 	@property
-	static Point max() {
-		return Point(_x.max, _y.max);
-	}
+	static Point max() { return Point(_x.max, _y.max); }
 
 	/// Returns: the Point with smallest coordinate in x and y direction.
 	@property
-	static Point min() {
-		return Point(_x.min, _y.min);
-	}
+	static Point min() { return Point(_x.min, _y.min); }
 
-	private:
+private:
 	int _x;
 	int _y;
 }
