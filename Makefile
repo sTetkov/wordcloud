@@ -1,5 +1,5 @@
 DC = dmd
-DFLAGS = -property -w -wi -gc -Isrc
+DFLAGS = -unittest -property -w -wi -gc -Isrc
 LD = dmd
 
 SOURCES = $(wildcard src/*.d)
