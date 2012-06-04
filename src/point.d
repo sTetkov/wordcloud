@@ -24,7 +24,7 @@ struct Point
 	/// Constructs a Point from given x and y coordinate.
 	/// Params: x = is the x coordinate.
 	///         y = is the y coordinate.
-	this(int x, int y)
+	pure nothrow this(int x, int y)
 	{
 		_x = x;
 		_y = y;
@@ -51,10 +51,10 @@ struct Point
 
 	/// Returns: The x coordinate of this Point.
 	@property
-	int x() const { return _x; }
+	pure nothrow int x() const { return _x; }
 	/// Returns: The y coordinate of this Point.
 	@property
-	int y() const { return _y; }
+	pure nothrow int y() const { return _y; }
 
 	unittest
 	{
@@ -71,12 +71,12 @@ struct Point
 	/// Parameters: x = is the new x coordinate.
 	/// Returns: The new x coordinate.
 	@property
-	int x(int x) { return _x = x; }
+	nothrow int x(int x) { return _x = x; }
 	/// Sets this y coordinate to given y coordinate.
 	/// Parameters: y = is the new y coordinate.
 	/// Returns: The new y coordinate.
 	@property
-	int y(int y) { return _y = y; }
+	nothrow int y(int y) { return _y = y; }
 
 	unittest
 	{
@@ -95,7 +95,7 @@ struct Point
 	/// Params: rhs = is the right-hand side Point
 	/// Returns: A new Point such that x == this.x op rhs.x and y == this.y op
 	/// rhs.y
-	Point opBinary(string op) (const Point rhs) const if (op == "+" || op == "-")
+	pure nothrow Point opBinary(string op) (const Point rhs) const if (op == "+" || op == "-")
 	{
 		return Point(mixin("_x" ~ op ~ "rhs._x"),
 		             mixin("_y" ~ op ~ "rhs._y"));
@@ -114,7 +114,7 @@ struct Point
 	/// Params: rhs = is right-hand side Point
 	/// Returns: This Point such that this.x = this.x op rhs.x and this.y =
 	/// this.y op rhs.y
-	ref Point opOpAssign(string op) (const Point rhs) if (op == "+" || op == "-")
+	nothrow ref Point opOpAssign(string op) (const Point rhs) if (op == "+" || op == "-")
 	{
 		mixin("_x" ~ op ~ "=rhs.x;");
 		mixin("_y" ~ op ~ "=rhs.y;");
@@ -132,11 +132,11 @@ struct Point
 
 	/// Returns: the Point with largest coordinate in x and y direction.
 	@property
-	static Point max() { return Point(_x.max, _y.max); }
+	static pure nothrow Point max() { return Point(typeof(_x).max, typeof(_y).max); }
 
 	/// Returns: the Point with smallest coordinate in x and y direction.
 	@property
-	static Point min() { return Point(_x.min, _y.min); }
+	static pure nothrow Point min() { return Point(typeof(_x).min, typeof(_y).min); }
 
 private:
 	int _x;

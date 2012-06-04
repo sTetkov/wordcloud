@@ -24,12 +24,14 @@ struct Rectangle
 	/// lowerRight.
 	/// Params: upperLeft = is the upper left of the Rectangle.
 	///         lowerRight = is the lower right of the Rectangle.
-	this(UpperLeft upperLeft, LowerRight lowerRight)
+	nothrow this(UpperLeft upperLeft, LowerRight lowerRight)
 	{
 		_upperLeft = upperLeft;
 		_lowerRight = lowerRight;
 	}
 
+	// TODO
+	// should be pure and nothrow
 	invariant()
 	{
 		assert(isValid(),
@@ -67,23 +69,23 @@ struct Rectangle
 
 	/// Returns: The upperLeft of this Rectangle.
 	@property
-	UpperLeft upperLeft() const { return _upperLeft; }
+	pure nothrow UpperLeft upperLeft() const { return _upperLeft; }
 	/// Returns: The upperLeft of this Rectangle.
 	@property
-	LowerRight lowerRight() const { return _lowerRight; }
+	pure nothrow LowerRight lowerRight() const { return _lowerRight; }
 
 	/// Returns: The leftmost x coordinate of this Rectangle.
 	@property
-	int left() const { return _upperLeft.x; }
+	pure nothrow int left() const { return _upperLeft.x; }
 	/// Returns: The rightmost x coordinate of this Rectangle.
 	@property
-	int right() const { return _lowerRight.x; }
+	pure nothrow int right() const { return _lowerRight.x; }
 	/// Returns: The topmost y coordinate of this Rectangle.
 	@property
-	int top() const { return _upperLeft.y; }
+	pure nothrow int top() const { return _upperLeft.y; }
 	/// Returns: The bottommost y coordinate of this Rectangle.
 	@property
-	int bottom() const { return _lowerRight.y; }
+	pure nothrow int bottom() const { return _lowerRight.y; }
 
 	unittest
 	{
@@ -106,10 +108,10 @@ struct Rectangle
 
 	/// Returns: The width of this Rectangle.
 	@property
-	int width() const { return _lowerRight.x - _upperLeft.x; }
+	pure nothrow int width() const { return _lowerRight.x - _upperLeft.x; }
 	/// Returns: The height of this Rectangle.
 	@property
-	int height() const { return _lowerRight.y - _upperLeft.y; }
+	pure nothrow int height() const { return _lowerRight.y - _upperLeft.y; }
 
 	unittest
 	{
@@ -121,7 +123,7 @@ struct Rectangle
 	alias moveUpperLeftTo moveRectangle;
 	/// Moves this Rectangle such that p is the new upperLeft.
 	/// Params: p = is the new upperLeft.
-	void moveUpperLeftTo(Point p)
+	nothrow void moveUpperLeftTo(Point p)
 	{
 		// TODO
 		// this should be like this
@@ -147,7 +149,7 @@ struct Rectangle
 		assert(r == Rectangle(UpperLeft(1,1), LowerRight(2,2)));
 	}
 
-	void moveCenterTo(Point p)
+	nothrow void moveCenterTo(Point p)
 	{
 		// TODO
 		// this should be like this
@@ -171,7 +173,7 @@ struct Rectangle
 	/// Params: other = is the Rectangle to test with
 	/// Returns: true, if this Rectangle and other Rectangle intersect.
 	/// Otherwise, false.
-	bool intersectsWith(Rectangle other) const
+	pure nothrow bool intersectsWith(Rectangle other) const
 	{
 		if (other.right <= left) return false;
 		if (other.left >= right) return false;
@@ -210,7 +212,7 @@ private:
 
 	/// Returns: true, if upperLeft is strictly above and strictly left of
 	/// lowerRight. Otherwise, false.
-	bool isValid() const
+	pure nothrow bool isValid() const
 	{
 		return _upperLeft.x < _lowerRight.x && _upperLeft.y < _lowerRight.y;
 	}
