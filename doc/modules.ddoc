@@ -1,4 +1,5 @@
 MODULES = 
+	$(MODULE word)
 	$(MODULE point)
 	$(MODULE rectangle)
 	$(MODULE position)
