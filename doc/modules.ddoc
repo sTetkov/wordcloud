@@ -2,4 +2,7 @@ MODULES =
 	$(MODULE word)
 	$(MODULE point)
 	$(MODULE rectangle)
+	$(MODULE boundingbox)
 	$(MODULE position)
+	$(MODULE fontsize)
+	$(MODULE image)
