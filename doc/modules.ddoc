@@ -1,0 +1,4 @@
+MODULES = 
+	$(MODULE point)
+	$(MODULE rectangle)
+	$(MODULE position)

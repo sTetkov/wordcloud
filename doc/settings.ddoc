@@ -1,0 +1,12 @@
+PROJECTNAME = wordcloud
+REFERENCETOP = index.html
+REPOSRCTREE = source
+TITLEBARTEXT = <a href="http://ci.inf-i2.uni-jena.de/job/word">continuously integrated</a>
+RESOURCEROOT = 
+PACKAGESEP = .
+FAVICON = $(RESOURCEROOT)ico/favicon.ico
+LOGOSRC = $(RESOURCEROOT)img/icon-github.png
+LOGOALT = $(PROJECTNAME)
+LOGOLINK = $(REFERENCETOP)
+COPYRIGHT = Jens K. Mueller
+COPYRIGHTFOOTER = &copy; $(COPYRIGHT) 2012-$(YEAR)

@@ -30,6 +30,13 @@ end
 	project "wordcloud"
 		kind        "ConsoleApp"
 
+		-- documentation
+		postbuildcommands { string.format("cp -a %s/bootDoc/assets docs", os.getcwd()) }
+		postbuildcommands { string.format("cp -a %s/bootDoc/bootdoc.css docs/", os.getcwd()) }
+		postbuildcommands { string.format("cp -a %s/bootDoc/bootdoc.js docs/", os.getcwd()) }
+		postbuildcommands { string.format("cp -a %s/bootDoc/ddoc-icons docs/", os.getcwd()) }
+		postbuildcommands { string.format("rdmd %s/bootDoc/generate.d --bootdoc=%s/doc --settings=%s/doc/settings.ddoc --modules=%s/doc/modules.ddoc --extra=%s/doc/index.d --output=docs %s/src", os.getcwd(), os.getcwd(), os.getcwd(), os.getcwd(), os.getcwd(), os.getcwd()) }
+
 --
 -- Use the --to=path option to control where the project files get generated.
 --
