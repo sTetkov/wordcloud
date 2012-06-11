@@ -9,6 +9,16 @@ import point;
 /// rectangles
 void positionRectangles(Rectangle[] rectangles)
 {
+	import std.random;
+	auto gen = Random(unpredictableSeed);
+	foreach (i, ref r; rectangles)
+	{
+		do
+		{
+			Point position = Point(uniform(0, 200, gen), uniform(0, 200, gen));
+			r.moveUpperLeftTo(position);
+		} while (r.intersects(rectangles[0 .. i]));
+	}
 }
 
 unittest
@@ -23,5 +33,9 @@ unittest
 
 bool intersects(Rectangle r, Rectangle[] rectangles)
 {
+	foreach (rect; rectangles)
+	{
+		if (r.intersectsWith(rect)) return true;
+	}
 	return false;
 }
