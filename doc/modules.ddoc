@@ -6,3 +6,5 @@ MODULES =
 	$(MODULE position)
 	$(MODULE fontsize)
 	$(MODULE image)
+	$(MODULE arguments)
+	$(MODULE parse)
