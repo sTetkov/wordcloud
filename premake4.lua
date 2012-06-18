@@ -14,7 +14,7 @@ end
 		flags          { "ExtraWarnings", "Symbols" }
 		buildoptions   { "-wi -property" }
 		configurations { "Optimize", "Tests" }
-		platforms      { "x64" }
+		platforms      { "native", "x64", "x32" }
 		libs = string.gsub(trim(os.outputof("gdlib-config --libs")), "-l", "-L-l")
 		gdflags = "-L-L" .. trim(os.outputof("gdlib-config --libdir"))
 		linkoptions    { gdflags, "-L-lgd", libs }
@@ -22,7 +22,7 @@ end
 
 	configuration "*Optimize*"
 		flags          { "Optimize" }
-		buildoptions   { "-d", "-noboundscheck", "-inline" }
+		buildoptions   { "-d", "-inline" }
 
 	configuration "*Tests*"
 		buildoptions   { "-unittest" }
