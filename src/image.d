@@ -99,7 +99,7 @@ class Image
 		Image im = new Image(boundingRectangle.width, boundingRectangle.height);
 		im.setBackgroundColor(red);
 		im.drawStringAt(boundingRectangle.upperLeft, word, font, fontSize);
-		im.writeAsPng("test.png", true);
+		im.writeAsPng("test.png");
 	}
 
 	/// Writes this Image as PNG file to given filename. It won't overwrite an
