@@ -1,6 +1,7 @@
 import core.stdc.stdio;
 
 extern (C)
+nothrow
 {
 enum
 {

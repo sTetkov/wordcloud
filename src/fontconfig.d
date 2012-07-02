@@ -3,6 +3,7 @@
 //
 
 extern (C)
+nothrow
 {
 struct FcObjectSet
 {

@@ -18,7 +18,7 @@ class Image
 	/// Constructs a white image with given width and height in pixels
 	/// Params: width = is the width of the image
 	///         height = is height of the image
-	this(in int width, in int height)
+	nothrow this(in int width, in int height)
 	{
 		_gdImagePtr = gdImageCreate(width, height);
 		gdImageColorResolve(_gdImagePtr, white.red, white.green, white.blue);
@@ -29,12 +29,13 @@ class Image
 		gdImageDestroy(_gdImagePtr);
 	}
 
-	/// Returns: the width of this Image
 	@property
-	int width() const { return _gdImagePtr.sx; }
-	/// Returns: the height of this Image
-	@property
-	int height() const { return _gdImagePtr.sy; }
+	{
+		/// Returns: the width of this Image
+		pure nothrow int width() const { return _gdImagePtr.sx; }
+		/// Returns: the height of this Image
+		pure nothrow int height() const { return _gdImagePtr.sy; }
+	}
 
 	unittest
 	{
@@ -45,7 +46,7 @@ class Image
 
 	/// Sets the background to given Color color
 	/// Params: color = is the new background color
-	void setBackgroundColor(in Color color)
+	nothrow void setBackgroundColor(in Color color)
 	{
 		int gdColor = gdImageColorResolve(_gdImagePtr, color.red, color.green, color.blue);
 		gdImageFilledRectangle(_gdImagePtr, 0, 0, _gdImagePtr.sx - 1, _gdImagePtr.sy - 1, gdColor);
@@ -104,13 +105,10 @@ class Image
 	/// Writes this Image as PNG file to given filename. It won't overwrite an
 	/// existing unless overWrite is true.
 	/// Params: filename = is the filename of the written PNG file
-	///         overWrite = indicates whether an existing file can be
-	///                     overwritten. Defaults to false.
 	/// Throws: Exception if file with filename already exists.
-	void writeAsPng(in string filename, in bool overWrite = false)
+	void writeAsPng(in string filename)
 	{
 		import std.file;
-		enforce(overWrite || !exists(filename), "file exists");
 		FILE* fp = enforce(std.c.stdio.fopen(std.string.toStringz(filename), "w+"));
 		scope(exit) fclose(fp);
 		gdImagePng(_gdImagePtr, fp);
@@ -128,7 +126,7 @@ enum green = Color(0, 0, 255);
 
 struct Color
 {
-	this(in ubyte red, in ubyte green, in ubyte blue)
+	pure nothrow this(in ubyte red, in ubyte green, in ubyte blue)
 	{
 		this.red = red;
 		this.green = green;

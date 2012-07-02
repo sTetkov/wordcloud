@@ -6,6 +6,7 @@ import std.getopt;
 import std.stdio;
 import std.file;
 import std.string;
+import std.exception;
 import core.stdc.stdlib;
 
 struct WordcloudArguments
@@ -23,11 +24,12 @@ struct WordcloudArguments
 		try
 		{
 			getopt(args,
-			       "i",      &_inputFile,
-			       "f",      &_font,
-			       "min",    &_minFontSize,
-			       "max",    &_maxFontSize,
-			       "help",   &help
+			       "i",         &_inputFile,
+			       "f",         &_font,
+			       "min",       &_minFontSize,
+			       "max",       &_maxFontSize,
+			       "overwrite", &_overwriteFile,
+			       "help",      &help
 			       );
 		}
 		catch(Exception e)
@@ -41,21 +43,12 @@ struct WordcloudArguments
 			exit(0);
 		}
 
-		if (args.length > 2)
-		{
-			throw new ArgumentException(format("Unrecognized options %s.", args[1 .. $]));
-		}
-
-		if (args.length != 2)
-		{
-			throw new ArgumentException("You have to specify an output file.");
-		}
+		enforceEx!ArgumentException(args.length <= 2, format("Unrecognized options %s.", args[1 .. $]));
+		enforceEx!ArgumentException(args.length == 2, "You have to specify an output file.");
 		_outputFile = args[$ - 1];
 
-		if (exists(_outputFile))
-		{
-			throw new ArgumentException(format("File '%s' already exists. Skipping.", _outputFile));
-		}
+		enforceEx!ArgumentException(overwriteFile || !exists(_outputFile),
+		                            format("File '%s' already exists. Skipping. Use --overwrite.", _outputFile));
 	}
 
 	static void printUsage()
@@ -70,6 +63,7 @@ struct WordcloudArguments
 		        "                  Run fc-list to get a list of all fontconfig fonts on your system. Defaults to \"\".\n"
 		        "  --min double    Minimum font size in pt. Defaults to ", DEFAULT_MIN_FONT_SIZE, ".\n"
 		        "  --max double    Maximum font size in pt. Defaults to ", DEFAULT_MAX_FONT_SIZE, ".\n"
+		        "  --overwrite     Overwrite output file. Defaults to false.\n"
 		        "  --help          Print this help.\n"
 		        "\n"
 		        "Input Data:\n",
@@ -78,15 +72,14 @@ struct WordcloudArguments
 	}
 
 	@property
-	string inputFile()   { return _inputFile; }
-	@property
-	string outputFile()  { return _outputFile; }
-	@property
-	string font()        { return _font; }
-	@property
-	double maxFontSize() { return _maxFontSize; }
-	@property
-	double minFontSize() { return _minFontSize; }
+	{
+		pure nothrow string inputFile()   { return _inputFile; }
+		pure nothrow string outputFile()  { return _outputFile; }
+		pure nothrow string font()        { return _font; }
+		pure nothrow double maxFontSize() { return _maxFontSize; }
+		pure nothrow double minFontSize() { return _minFontSize; }
+		pure nothrow double overwriteFile() { return _overwriteFile; }
+	}
 
 private:
 
@@ -95,6 +88,7 @@ private:
 	string _font;
 	double _maxFontSize;
 	double _minFontSize;
+	bool _overwriteFile;
 }
 
 unittest
@@ -106,7 +100,6 @@ unittest
 	assert(arguments.minFontSize == WordcloudArguments.DEFAULT_MIN_FONT_SIZE);
 	assert(arguments.maxFontSize == WordcloudArguments.DEFAULT_MAX_FONT_SIZE);
 
-	import std.exception;
 	assertThrown!ArgumentException(WordcloudArguments(["wordcloud"]));
 	assertThrown!ArgumentException(WordcloudArguments(["wordcloud", "-bfoo", "outfile.png"]));
 	assertThrown!ArgumentException(WordcloudArguments(["wordcloud", "foo", "outfile.png"]));
@@ -158,7 +151,7 @@ unittest
 /// ArgumentException is thrown when wrong options are given to the program.
 class ArgumentException : Exception
 {
-	this(string msg, string file = __FILE__, size_t line = __LINE__)
+	nothrow this(string msg, string file = __FILE__, size_t line = __LINE__)
 	{
 		super(msg, file, line);
 	}
