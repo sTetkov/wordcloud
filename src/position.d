@@ -9,28 +9,25 @@ import point;
 /// rectangles
 void positionRectangles(Rectangle[] rectangles)
 {
-	import std.random;
-	auto gen = Random(unpredictableSeed);
 	foreach (i, ref r; rectangles)
 	{
 		float t = 0;
 		do
 		{
-			Point position = spiral(t);
-			r.moveUpperLeftTo(position);
-			t += 0.1;
+			Point newPosition = spiral(t);
+
+			enum ratio = 4.0 / 3.0;
+			newPosition.x = roundTo!(int)(newPosition.x * ratio);
+			newPosition.y = roundTo!(int)(newPosition.y * 1/ratio);
+
+			r.moveCenterTo(newPosition);
+			++t;
 		} while (r.intersects(rectangles[0 .. i]));
 	}
 }
 
 unittest
 {
-	auto rectangles = [ Rectangle(UpperLeft(0,0), LowerRight(10,20)),
-	                    Rectangle(UpperLeft(0,0), LowerRight(30,10)),
-	                    Rectangle(UpperLeft(0,0), LowerRight(80,80)) ];
-	positionRectangles(rectangles);
-	import std.stdio;
-	writeln(rectangles);
 }
 
 bool intersects(Rectangle r, Rectangle[] rectangles)
@@ -43,11 +40,25 @@ bool intersects(Rectangle r, Rectangle[] rectangles)
 }
 
 
+import std.math;
+import std.conv;
 Point spiral(float t)
 {
-	import std.conv;
-	import std.math;
+	// Archimedean spiral
 	float x = t * cos(t);
 	float y = t * sin(t);
-	return Point(roundTo!int(x), roundTo!int(y));
+	return Point(roundTo!(int)(x), roundTo!(int)(y));
+}
+
+unittest
+{
+	auto reference = [
+	    0.0  : Point(0,0),                   PI/2     : Point(0,roundTo!(int)(PI/2)),
+	    PI   : Point(roundTo!(int)(-PI),0),  3.0/2*PI : Point(0,roundTo!(int)(-3.0/2*PI)),
+	    2*PI : Point(roundTo!(int)(2*PI),0)
+	];
+	foreach (k, v; reference)
+	{
+		assert(v == spiral(k), to!string(spiral(k)));
+	}
 }
