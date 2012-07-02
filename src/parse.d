@@ -3,23 +3,36 @@
 //
 
 import word;
+import arguments;
 
 import std.file;
 import std.string;
 import std.conv;
+import std.exception;
 debug import std.stdio;
 
 /// Parses a file into words where a line of the file looks like
 /// 'word double'
 void parseInput(std.file.File file, out Word[] words)
 {
+	size_t lineNo = 0;
 	foreach (line; file.byLine())
 	{
+		++lineNo;
 		debug writefln("Got line '%s'", line);
 		auto splittedLine = line.split();
 		debug writefln("splittedLine '%s'", splittedLine);
+		enforceEx!FileFormatException(splittedLine.length == 2,
+		                              format("%s at line %s: got '%s' but expected '%s'.",
+		                                     file.name ? file.name : "<stdin>", lineNo, line, WordcloudArguments.FILE_FORMAT));
 		string word = splittedLine[0].idup;
-		double frequency = to!(double)(splittedLine[1]);
+		double frequency;
+		try frequency = to!(double)(splittedLine[1]);
+		catch(ConvException e)
+		{
+			throw new FileFormatException(format("%s at line %s: got '%s' where the second argument is no double.",
+			                                     file.name ? file.name : "<stdin>", lineNo, line), e);
+		}
 		words ~= Word(word, frequency);
 	}
 }
@@ -81,4 +94,17 @@ unittest
 	auto file = File(tmpTestFilename, "r");
 	parseInput(file, words);
 	assert(refWords == words);
+}
+
+class FileFormatException : Exception
+{
+	nothrow this(string msg, string file = __FILE__, size_t line = __LINE__)
+	{
+		super(msg, file, line);
+	}
+
+	nothrow this(string msg, Throwable next = null, string file = __FILE__, size_t line = __LINE__)
+	{
+		super(msg, file, line, next);
+	}
 }

@@ -12,6 +12,7 @@ struct WordcloudArguments
 {
 	immutable double DEFAULT_MIN_FONT_SIZE = 10;
 	immutable double DEFAULT_MAX_FONT_SIZE = 20;
+	immutable string FILE_FORMAT = "<word> <double>";
 
 	this(string args[])
 	{
@@ -71,9 +72,8 @@ struct WordcloudArguments
 		        "  --max double    Maximum font size in pt. Defaults to ", DEFAULT_MAX_FONT_SIZE, ".\n"
 		        "  --help          Print this help.\n"
 		        "\n"
-		        "Input Data:\n"
-		        "<word1> <double>\n"
-		        "<word2> <double>\n"
+		        "Input Data:\n",
+		        FILE_FORMAT, "\n"
 		        "...");
 	}
 

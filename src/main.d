@@ -14,6 +14,7 @@ import fontsize;
 
 import std.stdio;
 import std.file;
+import std.array : empty;
 
 version(unittest)
 {
@@ -50,15 +51,27 @@ else
 		}
 
 		Word[] words;
-		parseInput(input, words);
+		try parseInput(input, words);
+		catch(FileFormatException e)
+		{
+			stderr.writeln(e.msg);
+			return 2;
+		}
+
+		if (words.empty)
+		{
+			stderr.writeln("No input is given. Skipping.");
+			return 2;
+		}
 
 		// scale font sizes
 		computeFontSize(words, arguments.minFontSize, arguments.maxFontSize);
 
 		// get minimal bounding rectangles for words
 		auto rectangles = boundingRectangles(words, arguments.font);
-
 		import std.range;
+		// @@@BUG@@@ 7948
+		//auto wordsWithRectangles = zip(StoppingPolicy.requireSameLength, words, rectangles);
 		auto wordsWithRectangles = zip(words, rectangles);
 
 		import std.algorithm;
