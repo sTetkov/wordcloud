@@ -24,7 +24,8 @@ else
 	int main(string args[])
 	{
 		// get program arguments
-		try WordcloudArguments arguments = WordcloudArguments(args);
+		WordcloudArguments arguments;
+		try arguments = WordcloudArguments(args);
 		catch(ArgumentException e)
 		{
 			stderr.writeln(e.msg);
@@ -34,34 +35,55 @@ else
 
 		// open file and parse input
 		auto input = stdin;
-		//...
+		if (arguments.inputFile)
+		{
+			try input = File(arguments.inputFile, "r");
+			catch(Exception e)
+			{
+				stderr.writeln(e.msg);
+				return 2;
+			}
+		}
+		else
+		{
+			writeln("Reading from stdin ...");
+		}
 
 		Word[] words;
-		//...
+		parseInput(input, words);
 
 		// scale font sizes
-		//...
+		computeFontSize(words, arguments.minFontSize, arguments.maxFontSize);
 
 		// get minimal bounding rectangles for words
-		//auto rectangles = ...
+		auto rectangles = boundingRectangles(words, arguments.font);
 
-		//...
+		import std.range;
+		auto wordsWithRectangles = zip(words, rectangles);
 
+		import std.algorithm;
 		// sort according to frequency
-		//...
+		sort!("a[0].frequency > b[0].frequency")(wordsWithRectangles);
 
 		// position rectangles
-		//...
+		positionRectangles(rectangles);
 
 		// moves rectangles such that no rectangles upper left has a negative
 		// coordinate
-		//...
+		auto min = rectangles.boundingUpperLeft();
+		foreach (ref r; rectangles) r.moveUpperLeftTo(r.upperLeft - min);
+		assert(rectangles.boundingUpperLeft() == origin);
 
 		// get the needed image dimension
-		//...
+		auto max = rectangles.boundingLowerRight();
 
 		// draw image and write out image file
-		//...
+		Image im = new Image(max.x, max.y);
+		foreach (word, fontSize, r; wordsWithRectangles)
+		{
+			im.drawStringAt(r.upperLeft, word, arguments.font, fontSize);
+		}
+		im.writeAsPng(arguments.outputFile);
 
 		return 0;
 	}

@@ -13,10 +13,12 @@ void positionRectangles(Rectangle[] rectangles)
 	auto gen = Random(unpredictableSeed);
 	foreach (i, ref r; rectangles)
 	{
+		float t = 0;
 		do
 		{
-			Point position = Point(uniform(0, 200, gen), uniform(0, 200, gen));
+			Point position = spiral(t);
 			r.moveUpperLeftTo(position);
+			t += 0.1;
 		} while (r.intersects(rectangles[0 .. i]));
 	}
 }
@@ -38,4 +40,14 @@ bool intersects(Rectangle r, Rectangle[] rectangles)
 		if (r.intersectsWith(rect)) return true;
 	}
 	return false;
+}
+
+
+Point spiral(float t)
+{
+	import std.conv;
+	import std.math;
+	float x = t * cos(t);
+	float y = t * sin(t);
+	return Point(roundTo!int(x), roundTo!int(y));
 }
