@@ -22,7 +22,6 @@ version(unittest)
 }
 else
 {
-	//Some comment relating to the main function
 	int main(string args[])
 	{
 		// get program arguments
@@ -30,7 +29,6 @@ else
 		try arguments = WordcloudArguments(args);
 		catch(ArgumentException e)
 		{
-			//Argument error output on std error stream 
 			stderr.writeln(e.msg);
 			WordcloudArguments.printUsage();
 			return 1;

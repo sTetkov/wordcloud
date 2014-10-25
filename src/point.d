@@ -30,23 +30,23 @@ struct Point
 		_y = y;
 	}
 
-	/// Returns: This Point as string. E.g. "(1,1)" for Point(1,1).
+	/// Returns: This Point as string. E.g. "(1, 1)" for Point(1, 1).
 	string toString() const
 	{
-		return "(" ~ to!string(_x) ~ "," ~ to!string(_y) ~ ")";
+		return "(" ~ to!string(_x) ~ ", " ~ to!string(_y) ~ ")";
 	}
 
 	unittest
 	{
 		Point p;
-		assert(to!string(p) == "(0,0)");
-		assert(p.toString() == "(0,0)");
+		assert(to!string(p) == "(0, 0)");
+		assert(p.toString() == "(0, 0)");
 
 		p = Point(1, 2);
-		assert(to!string(p) == "(1,2)");
+		assert(to!string(p) == "(1, 2)");
 
 		const Point p2 = Point(1,2);
-		assert(to!string(p2) == "(1,2)");
+		assert(to!string(p2) == "(1, 2)");
 	}
 
 	/// Returns: The x coordinate of this Point.
